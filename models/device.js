@@ -1,27 +1,60 @@
-const { promisify } = require('util');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/connectionPool');
 
-import { pool } from "../config/connectionPool";
-
-// promisify query method
-pool.query = promisify(pool.query);
-
-// define device schema
-const deviceSchema = `CREATE TABLE IF NOT EXISTS IP_Database (
-    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    IP VARCHAR(255) NOT NULL,
-    Name VARCHAR(255) NOT NULL,
-    User_Agent VARCHAR(255) NOT NULL,
-    Details VARCHAR(255) NOT NULL,
-    Details_ipInfo VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_user_agent (User_Agent)
-)`;
-
-// create device table if not exists
-pool.query(deviceSchema, (err, results) => {
-    if (err) throw err;
-    console.log('device table created successfully');
+// define device model
+const Device = sequelize.define('IP_Database', {
+    ID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    IP: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    Name: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    User_Agent: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    Details: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    Details_ipInfo: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        onUpdate: DataTypes.NOW
+    }
+}, {
+    indexes: [
+        {
+            unique: false,
+            fields: ['User_Agent']
+        }
+    ],
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
 });
 
-module.exports = pool.promise().query;
+// create table if not exists
+Device.sync().then(() => {
+    console.log('Device table created successfully');
+}).catch((err) => {
+    console.error('Error creating device table:', err);
+});
+
+module.exports = Device;

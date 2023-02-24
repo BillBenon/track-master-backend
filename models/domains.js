@@ -1,26 +1,46 @@
-const { promisify } = require('util');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/connectionPool');
 
-import { pool } from "../config/connectionPool";
-
-// promisify query method
-pool.query = promisify(pool.query);
-
-// define domains schema
-const domainsSchema = `CREATE TABLE IF NOT EXISTS Domains (
-    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    Domain VARCHAR(255) NOT NULL,
-    URL VARCHAR(255) NOT NULL,
-    Owner VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_url (URL)
-    INDEX idx_owner (Owner)
-)`;
-
-// create domains table if not exists
-pool.query(domainsSchema, (err, results) => {
-    if (err) throw err;
-    console.log('Domains table created successfully');
+const Domains = sequelize.define('Domains', {
+    ID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    Domain: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    URL: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        unique: true
+    },
+    Owner: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        onUpdate: DataTypes.NOW
+    }
+}, {
+    indexes: [
+        {
+            name: 'idx_url',
+            fields: ['URL']
+        },
+        {
+            name: 'idx_owner',
+            fields: ['Owner']
+        }
+    ]
 });
 
-module.exports = pool.promise().query;
+module.exports = Domains;

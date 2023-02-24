@@ -1,24 +1,42 @@
-const { promisify } = require('util');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/connectionPool');
 
-import { pool } from "../config/connectionPool";
-
-// promisify query method
-pool.query = promisify(pool.query);
-
-// define details schema
-const detailsSchema = `CREATE TABLE IF NOT EXISTS Details (
-    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    IP VARCHAR(255) NOT NULL,
-    Brand VARCHAR(255) NOT NULL,
-    Host VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-)`;
-
-// create details table if not exists
-pool.query(detailsSchema, (err, results) => {
-    if (err) throw err;
-    console.log('Details table created successfully');
+// define details model
+const Details = sequelize.define('details', {
+    ID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    IP: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    Brand: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    Host: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+        onUpdate: DataTypes.NOW
+    }
 });
 
-module.exports = pool.promise().query;
+// sync model with database
+Details.sync()
+    .then(() => console.log('Details table created successfully'))
+    .catch((err) => console.error(err));
+
+module.exports = Details;

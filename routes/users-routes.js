@@ -10,7 +10,7 @@ const router = express.Router();
 router.post(
     "/login",
     [
-        check("email")
+        check("email").exists()
             .normalizeEmail()
             .withMessage("Please enter a valid email."),
         check("password", "Password has to be atleast 8 alphanumeric characters.")
@@ -25,7 +25,7 @@ router.post(
 router.post(
     "/signup",
     [
-        check("email")
+        check("email").exists()
             .isEmail()
             .withMessage("Please enter a valid email.")
             .custom((value, { req }) => {
@@ -47,7 +47,7 @@ router.patch(
     "/:uid",
     [checkAuth],
     [
-        check("email")
+        check("email").exists()
             .isEmail()
             .withMessage("Please enter a valid email.")
             .custom((value, { req }) => {
