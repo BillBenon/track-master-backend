@@ -2,7 +2,6 @@ const fs = require("fs");
 
 const { validationResult } = require("express-validator");
 
-const pool = require("../config/connectionPool");
 const HttpError = require("../models/http-error");
 const Domains = require("../models/domains");
 
@@ -52,7 +51,7 @@ exports.createDomain = async (req, res, next) => {
     const { Domain, URL, Owner } = req.body;
 
     try {
-        const existingDomain = await DomainModel.findOne({ where: { URL } });
+        const existingDomain = await Domains.findOne({ where: { URL } });
         if (existingDomain) {
             const error = new HttpError(
                 'Domain exists already, register another domain instead.',
