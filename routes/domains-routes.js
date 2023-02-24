@@ -22,6 +22,6 @@ router.post(
     domainsControllers.createDomain
 );
 
-router.delete("/:bid", domainsControllers.deleteDomain);
+router.delete("/:did", domainsControllers.deleteDomain);
 
 module.exports = router;

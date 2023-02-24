@@ -1,5 +1,3 @@
-const fs = require("fs");
-
 const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
@@ -73,7 +71,7 @@ exports.createDomain = async (req, res, next) => {
 };
 
 exports.deleteDomain = async (req, res, next) => {
-    const domainId = req.params.bid;
+    const domainId = req.params.did;
 
     let domain;
     try {
