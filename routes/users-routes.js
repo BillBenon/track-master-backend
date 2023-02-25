@@ -7,6 +7,131 @@ const User = require("../models/user");
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: API for managing users
+ * 
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The auto-generated id of the user
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: The email address of the user
+ *         password:
+ *           type: string
+ *           description: The password of the user
+ *       example:
+ *         id: 1
+ *         email: john.doe@example.com
+ *         password: abc123
+ *
+ * /users/login:
+ *   post:
+ *     summary: Login user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email address of the user
+ *                 example: john.doe@example.com
+ *               password:
+ *                 type: string
+ *                 description: The password of the user
+ *                 example: abc123
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Invalid email or password
+ *
+ * /users/signup:
+ *   post:
+ *     summary: Create new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email address of the user
+ *                 example: john.doe@example.com
+ *               password:
+ *                 type: string
+ *                 description: The password of the user
+ *                 example: abc123
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Invalid input data
+ *       409:
+ *         description: Email address already exists
+ *
+ * /users/{uid}:
+ *   patch:
+ *     summary: Update user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: uid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user to update
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email address of the user
+ *                 example: john.doe@example.com
+ *               password:
+ *                 type: string
+ *                 description: The password of the user
+ *                 example: abc123
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized access
+ *       404:
+ *         description: User not found
+ */
+
 router.post(
     "/login",
     [
