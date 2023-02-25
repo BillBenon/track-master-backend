@@ -11,61 +11,98 @@ const router = express.Router();
  * tags:
  *   name: Devices
  *   description: API for managing devices
- * 
+ *
  * components:
  *   schemas:
  *     Device:
  *       type: object
- *       properties:
- *         ID:
- *           type: integer
- *           format: int64
- *           description: The auto-generated id of the device.
- *         IP:
- *           type: string
- *           description: The IP address of the device.
- *         Name:
- *           type: string
- *           description: The name of the device.
- *         User_Agent:
- *           type: string
- *           description: The user agent of the device.
- *         Details:
- *           type: object
- *           description: Additional details about the device.
- *         Details_ipInfo:
- *           type: object
- *           description: Additional details about the device's IP address.
- *         created_at:
- *           type: string
- *           format: date-time
- *           description: The date and time the device was created.
- *         updated_at:
- *           type: string
- *           format: date-time
- *           description: The date and time the device was last updated.
  *       required:
+ *         - ID
  *         - IP
  *         - Name
  *         - User_Agent
  *         - Details
  *         - Details_ipInfo
  *         - created_at
- *         - updated_at
+ *       properties:
+ *         ID:
+ *           type: integer
+ *           description: The auto-generated ID of the device
+ *         IP:
+ *           type: string
+ *           description: The IP address of the device
+ *         Name:
+ *           type: string
+ *           description: The name of the device
+ *         User_Agent:
+ *           type: string
+ *           description: The user agent of the device
+ *         Details:
+ *           type: string
+ *           description: Additional details about the device
+ *         Details_ipInfo:
+ *           type: string
+ *           description: Additional IP info about the device
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *           description: The date and time when the device was created
  *       example:
  *         ID: 1
- *         IP: 192.168.1.1
- *         Name: My Laptop
- *         User_Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36
- *         Details: { "OS": "Windows 10", "RAM": "8 GB" }
- *         Details_ipInfo: { "City": "New York", "Country": "United States" }
- *         created_at: '2022-02-20T14:15:00.000Z'
- *         updated_at: '2022-02-22T08:30:00.000Z'
+ *         IP: "192.168.1.1"
+ *         Name: "Device 1"
+ *         User_Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+ *         Details: "Additional details about Device 1"
+ *         Details_ipInfo: "Additional IP info about Device 1"
+ *         created_at: "2022-01-01T00:00:00.000Z"
  *
- * /api/devices:
+ * /api/device/{did}:
  *   get:
- *     summary: Get all devices
+ *     summary: Get a device by ID
  *     tags: [Devices]
+ *     parameters:
+ *       - in: path
+ *         name: did
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the device to retrieve
+ *     responses:
+ *       "200":
+ *         description: A device object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Device'
+ *       "404":
+ *         description: The device was not found
+ *       "500":
+ *         description: Some error occurred while retrieving the device
+ *
+ *   delete:
+ *     summary: Delete a device by ID
+ *     tags: [Devices]
+ *     parameters:
+ *       - in: path
+ *         name: did
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the device to delete
+ *     responses:
+ *       "200":
+ *         description: The device was deleted successfully
+ *       "404":
+ *         description: The device was not found
+ *       "500":
+ *         description: Some error occurred while deleting the device
+ *
+ * /api/device:
+ *   get:
+ *     summary: Retrieve a list of all devices
+ *     description: Retrieve a list of all devices in the IP database
+ *     tags:
+ *       - Devices
  *     responses:
  *       200:
  *         description: A list of devices
@@ -75,123 +112,34 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Device'
- * 
+ *
  *   post:
  *     summary: Create a new device
- *     tags: [Devices]
+ *     description: Create a new device in the IP database
+ *     tags:
+ *       - Devices
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               IP:
- *                 type: string
- *                 description: The IP address of the device.
- *                 example: 192.168.1.1
- *               Name:
- *                 type: string
- *                 description: The name of the device.
- *                 example: My Laptop
- *               User_Agent:
- *                 type: string
- *                 description: The user agent of the device.
- *                 example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36
- *               Details:
- *                 type: object
- *                 description: Additional details about the device.
- *               Details
- *               Details_ipInfo:
- *                 type: string
- *                 description: IP info details of the device
- *               created_at:
- *                 type: string
- *                 format: date-time
- *                 description: The date the device was created
- *               updated_at:
- *                 type: string
- *                 format: date-time
- *                 description: The date the device was last updated
+ *             $ref: '#/components/schemas/NewDevice'
  *     responses:
  *       201:
- *         description: Device created successfully
+ *         description: The created device
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Device'
  *       400:
- *         description: Invalid input data
- * /api/devices/{did}:
- *   get:
- *     summary: Get a device by ID
- *     tags: [Devices]
- *     parameters:
- *       - in: path
- *         name: did
- *         schema:
- *           type: integer
- *           format: int64
- *         required: true
- *         description: Numeric ID of the device to get
- *     responses:
- *       200:
- *         description: A device object
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Device'
- *       404:
- *         description: Device not found
- * 
- *   delete:
- *     summary: Delete a device by ID
- *     tags: [Devices]
- *     description: Deletes a single device
- *     parameters:
- *       - in: path
- *         name: did
- *         schema:
- *           type: integer
- *           format: int64
- *         required: true
- *         description: ID of the device to delete
- *     responses:
- *       204:
- *         description: Device successfully deleted
- *       404:
- *         description: Device not found
- * 
- *   patch:
- *     summary: Update a device by ID
- *     tags: [Devices]
- *     parameters:
- *       - in: path
- *         name: did
- *         schema:
- *           type: integer
- *           format: int64
- *         required: true
- *         description: Numeric ID of the device to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Device'
- *     responses:
- *       '200':
- *         description: A device object
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Device'
- *       '400':
- *         description: Invalid input data
- *       '404':
- *         description: Device not found
- * 
+ *         description: Invalid request body
+ *       401:
+ *         description: Unauthorized access
+ *
  */
+
 
 router.get("/:did", deviceControllers.getDeviceById);
 

@@ -8,11 +8,16 @@ const router = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Details
+ *   description: API for managing details.
+ * 
  * components:
  *   schemas:
- *     Details:
+ *     Detail:
  *       type: object
  *       required:
+ *         - ID
  *         - IP
  *         - Brand
  *         - Host
@@ -21,103 +26,128 @@ const router = express.Router();
  *       properties:
  *         ID:
  *           type: integer
- *           description: The auto-generated ID of the details
+ *           description: The auto-generated ID of the detail.
  *         IP:
  *           type: string
- *           description: The IP address
+ *           description: The IP address of the detail.
  *         Brand:
  *           type: string
- *           description: The brand
+ *           description: The brand of the detail.
  *         Host:
  *           type: string
- *           description: The host name
+ *           description: The host of the detail.
  *         createdAt:
  *           type: string
  *           format: date-time
- *           description: The date and time the details were created
+ *           description: The date and time the detail was created.
  *         updatedAt:
  *           type: string
  *           format: date-time
- *           description: The date and time the details were last updated
- *       example:
- *         ID: 1
- *         IP: 127.0.0.1
- *         Brand: ACME Corporation
- *         Host: example.com
- *         createdAt: 2023-02-25T11:23:45.000Z
- *         updatedAt: 2023-02-25T11:23:45.000Z
+ *           description: The date and time the detail was last updated.
+ * 
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  *
- * /details/{did}:
+ * /api/details/{did}:
  *   get:
- *     summary: Get a single detail by ID
+ *     summary: Get detail by ID
+ *     tags: [Details]
  *     parameters:
  *       - in: path
  *         name: did
  *         required: true
- *         description: Numeric ID of the detail to get
+ *         description: ID of the detail to retrieve
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: Details found and returned
+ *         description: Success
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Details'
+ *               $ref: '#/components/schemas/Detail'
  *       404:
- *         description: Details not found for the given ID
- *
- * /details:
+ *         description: Detail not found
+ * 
+ *   delete:
+ *     summary: Delete detail by ID
+ *     tags: [Details]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: did
+ *         required: true
+ *         description: ID of the detail to delete
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Detail deleted
+ *       404:
+ *         description: Detail not found
+ * 
+ * /api/details:
  *   get:
- *     summary: Get a list of all details
+ *     summary: Get all details
+ *     tags: [Details]
  *     responses:
  *       200:
- *         description: A list of details
+ *         description: Success
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Details'
- *
+ *                 $ref: '#/components/schemas/Detail'
+ * 
  *   post:
  *     summary: Create a new detail
+ *     tags: [Details]
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     requestBody:
- *       description: Details to create
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Details'
+ *             type: object
+ *             required:
+ *               - IP
+ *               - Brand
+ *               - Host
+ *               - createdAt
+ *             properties:
+ *               IP:
+ *                 type: string
+ *                 description: The IP address of the detail.
+ *               Brand:
+ *                 type: string
+ *                 description: The brand of the detail.
+ *               Host:
+ *                 type: string
+ *                 description: The host of the detail.
+ *               createdAt:
+ *                 type: string
+ *                 format: date-time
+ *                 description: The date and time the detail was created.
+ *            
  *     responses:
- *       201:
- *         description: Details created
+ *       "201":
+ *         description: A newly created detail object
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Details'
- *       400:
- *         description: Invalid request body
- *
- * /details/{did}:
- *   delete:
- *     summary: Delete a single detail by ID
- *     security:
- *       - BearerAuth: []
- *     parameters:
- *       - in: path
- *         name: did
- *         required: true
- *         description: Numeric ID of the detail to delete
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Details deleted successfully
- *       404:
- *         description: Details not found for the given ID
+ *               $ref: '#/components/schemas/Detail'
+ *       "400":
+ *         description: Bad request
+ *       "401":
+ *         description: Unauthorized
+ *       "500":
+ *         description: Server error
  */
 
 router.get("/:did", detailsControllers.getDetailById);
