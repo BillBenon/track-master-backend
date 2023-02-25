@@ -59,6 +59,8 @@ const router = express.Router();
  * /api/device/{did}:
  *   get:
  *     summary: Get a device by ID
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Devices]
  *     parameters:
  *       - in: path
@@ -81,6 +83,8 @@ const router = express.Router();
  *
  *   delete:
  *     summary: Delete a device by ID
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Devices]
  *     parameters:
  *       - in: path
@@ -100,6 +104,8 @@ const router = express.Router();
  * /api/device:
  *   get:
  *     summary: Retrieve a list of all devices
+ *     security:
+ *       - BearerAuth: []
  *     description: Retrieve a list of all devices in the IP database
  *     tags:
  *       - Devices

@@ -54,6 +54,8 @@ const router = express.Router();
  * /api/details/{did}:
  *   get:
  *     summary: Get detail by ID
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Details]
  *     parameters:
  *       - in: path
@@ -93,6 +95,8 @@ const router = express.Router();
  * /api/details:
  *   get:
  *     summary: Get all details
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Details]
  *     responses:
  *       200:

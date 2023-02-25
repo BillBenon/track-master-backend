@@ -53,6 +53,8 @@ const router = express.Router();
  * /api/domains:
  *   get:
  *     summary: Get all domains
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Domains]
  *     responses:
  *       200:
@@ -66,6 +68,8 @@ const router = express.Router();
  * 
  *   post:
  *     summary: Create a new domain
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Domains]
  *     requestBody:
  *       required: true
@@ -99,6 +103,8 @@ const router = express.Router();
  * /api/domains/{did}:
  *   get:
  *     summary: Get a domain by ID
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Domains]
  *     parameters:
  *       - in: path
@@ -120,6 +126,8 @@ const router = express.Router();
  * 
  *   delete:
  *     summary: Delete domain by ID
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Domains]
  *     description: Deletes a single domain
  *     parameters:

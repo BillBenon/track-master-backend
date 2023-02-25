@@ -90,6 +90,8 @@ const router = express.Router();
  * /api/data/{did}:
  *   get:
  *     summary: Get data by ID
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Data]
  *     parameters:
  *       - name: did
@@ -112,6 +114,8 @@ const router = express.Router();
  *
  *   delete:
  *     summary: Delete data by ID
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Data]
  *     parameters:
  *       - name: did
