@@ -36,7 +36,7 @@ const router = express.Router();
  *         email: john.doe@example.com
  *         password: abc123
  *
- * /users/login:
+ * /api/users/login:
  *   post:
  *     summary: Login user
  *     tags: [Users]
@@ -64,7 +64,7 @@ const router = express.Router();
  *       401:
  *         description: Invalid email or password
  *
- * /users/signup:
+ * /api/users/signup:
  *   post:
  *     summary: Create new user
  *     tags: [Users]
@@ -92,7 +92,7 @@ const router = express.Router();
  *       409:
  *         description: Email address already exists
  *
- * /users/{uid}:
+ * /api/users/{uid}:
  *   patch:
  *     summary: Update user
  *     tags: [Users]
