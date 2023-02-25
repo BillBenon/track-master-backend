@@ -64,3 +64,5 @@ router.patch(
     ],
     usersControllers.updateUser
 );
+
+module.exports = router;

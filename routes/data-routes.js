@@ -8,15 +8,14 @@ const router = express.Router();
 
 router.get("/:did", dataControllers.getDataById);
 
-router.get("/", dataControllers.getdata);
+router.get("/", dataControllers.getData);
 
 router.use(checkAuth);
 
 router.post(
     "/",
     [
-        body("ID").trim().isNumeric().not().isEmpty(),
-        body("IP").trim().isNumeric().not().isEmpty(),
+        body("IP").trim().not().isEmpty(),
         body("IPDetails").trim().not().isEmpty(),
         body("Host").trim().not().isEmpty(),
         body("Source").trim().not().isEmpty(),
@@ -32,6 +31,6 @@ router.post(
     dataControllers.createData
 );
 
-router.delete("/:bid", dataControllers.deleteData);
+router.delete("/:did", dataControllers.deleteData);
 
 module.exports = router;

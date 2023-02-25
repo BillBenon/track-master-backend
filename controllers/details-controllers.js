@@ -8,7 +8,7 @@ exports.getDetailById = async (req, res, next) => {
 
     let detail;
     try {
-        detail = await Detail.findByPk(detailId);
+        detail = await Details.findByPk(detailId);
         if (!detail) {
             throw new Error("Could not find detail.");
         }
@@ -25,7 +25,7 @@ exports.getDetailById = async (req, res, next) => {
 
 exports.getDetails = async (req, res, next) => {
     try {
-        const details = await Detail.findAll();
+        const details = await Details.findAll();
         res.json({ details });
     } catch (err) {
         console.log(err);
@@ -51,7 +51,7 @@ exports.createDetail = async (req, res, next) => {
     try {
 
         const newDetail = await Details.create({ IP, Brand, Host, createdAt });
-        res.status(201).json({ detailId: newDetail.ID, Brand: newDetail.Brand, Host: newDetail.Host, createdAt: newDetail.createdAt });
+        res.status(201).json({ detailId: newDetail.ID, IP: newDevice.IP, Brand: newDetail.Brand, Host: newDetail.Host, createdAt: newDetail.createdAt });
     } catch (err) {
         console.log(err);
         const error = new HttpError(

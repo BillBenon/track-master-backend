@@ -15,7 +15,7 @@ router.use(checkAuth);
 router.post(
     "/",
     [
-        body("IP").trim().isNumeric().not().isEmpty(),
+        body("IP").trim().not().isEmpty(),
         body("Brand").trim().not().isEmpty(),
         body("Host").trim().not().isEmpty(),
         body("createdAt").trim().isNumeric().not().isEmpty(),
