@@ -95,7 +95,7 @@ exports.signUp = async (req, res, next) => {
         return next(error);
     }
 
-    res.status(201).json({ userId: user.email });
+    res.status(201).json({ email: user.email });
 };
 
 exports.login = async (req, res, next) => {
