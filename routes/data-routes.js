@@ -283,10 +283,12 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Data'
- *       401:
- *         $ref: '#/components/responses/UnauthorizedError'
- *       500:
- *         $ref: '#/components/responses/InternalServerError'
+ *       "400":
+ *         description: Bad request
+ *       "401":
+ *         description: Unauthorized
+ *       "500":
+ *         description: Server error
  */
 
 router.get("/:did", dataControllers.getDataById);
