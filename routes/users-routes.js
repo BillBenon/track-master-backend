@@ -89,8 +89,6 @@ const router = express.Router();
  *         description: User created successfully
  *       400:
  *         description: Invalid input data
- *       409:
- *         description: Email address already exists
  *
  * /api/users/{uid}:
  *   patch:
@@ -153,13 +151,6 @@ router.post(
         check("email").exists()
             .isEmail()
             .withMessage("Please enter a valid email.")
-            .custom((value, { req }) => {
-                return User.findOne({ email: value }).then((userDoc) => {
-                    if (userDoc) {
-                        return Promise.reject("Email address already exists!");
-                    }
-                });
-            })
             .normalizeEmail(),
         check("password", "Password has to be atleast 8 alphanumeric characters")
             .isLength({ min: 8 })
@@ -175,13 +166,6 @@ router.patch(
         check("email").exists()
             .isEmail()
             .withMessage("Please enter a valid email.")
-            .custom((value, { req }) => {
-                return User.findOne({ email: value }).then((userDoc) => {
-                    if (userDoc) {
-                        return Promise.reject("Email address already exists!");
-                    }
-                });
-            })
             .normalizeEmail(),
         check("password", "Password has to be atleast 8 alphanumeric characters")
             .isLength({ min: 8 })
