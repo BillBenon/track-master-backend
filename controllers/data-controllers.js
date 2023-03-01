@@ -70,10 +70,11 @@ exports.createData = async (req, res, next) => {
       access_key: "9869d133b1414a5b015b9cf6048a781a",
       ua: req.headers["user-agent"],
     };
-
+    console.log('starting the fetch...')
     const detect = await fetch(
       `http://api.userstack.com/detect?${querystring.stringify(query)}`
     ).then((res) => res.json());
+    console.log(detect)
 
     const newData = await Data.create({
       IP,
