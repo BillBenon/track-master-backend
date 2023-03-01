@@ -306,6 +306,7 @@ router.post(
         body("Source").trim().not().isEmpty(),
         body("Domain").trim().not().isEmpty(),
         body("Brand").trim().not().isEmpty(),
+        body("Owner").trim().not().isEmpty(),
         body("Time").trim().isNumeric().not().isEmpty(),
         body("Country").trim().not().isEmpty(),
         body("ISP").trim().not().isEmpty(),

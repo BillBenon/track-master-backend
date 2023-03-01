@@ -80,7 +80,7 @@ exports.createData = async (req, res, next) => {
       Domain,
       Brand,
       Time,
-      flag: data.flag,
+      CountryFlag: data.flag,
       Country: data.name.common,
       ISP,
       VPN,

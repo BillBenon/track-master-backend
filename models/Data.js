@@ -31,7 +31,7 @@ const Data = sequelize.define(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    owner: {
+    Owner: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -43,7 +43,7 @@ const Data = sequelize.define(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    countryFlag: {
+    CountryFlag: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -110,11 +110,19 @@ const Data = sequelize.define(
         name: "idx_email",
         fields: ["Domain"],
       },
+      {
+        name: "idx_owner",
+        fields: ["Owner"],
+      },
+      {
+        name: "idx_countryFlag",
+        fields: ["CountryFlag"],
+      },
     ],
   }
 );
 
-Data.sync()
+Data.sync({ alter: true })
   .then(() => {
     console.log("Data table created successfully");
   })

@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "freedb_trackmaster",
+    "password": "bZk@DH6hys2U*aU",
+    "database": "freedb_trackmaster",
+    "host": "sql.freedb.tech",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "freedb_trackmaster",
+    "password": "bZk@DH6hys2U*aU",
+    "database": "freedb_trackmaster",
+    "host": "sql.freedb.tech",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "freedb_trackmaster",
+    "password": "bZk@DH6hys2U*aU",
+    "database": "freedb_trackmaster",
+    "host": "sql.freedb.tech",
+    "dialect": "mysql"
+  }
+}

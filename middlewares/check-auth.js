@@ -7,15 +7,16 @@ module.exports = async (req, res, next) => {
     return next();
   }
   try {
-    const token = req.headers.Authorization.split(" ")[1];
-    console.log(token)
+    const token = req.headers.authorization.split(" ")[1];
+    console.log(token);
     if (!token) {
-      throw new Error("Authentication failed!");
+      throw new Error("Authentication failed");
     }
     const decodedToken = await jwt.verify(token, process.env.JWT_KEY);
     req.userData = { userId: decodedToken.id };
     next();
   } catch (err) {
+    console.log("The error is: ", err);
     const error = new HttpError("Authentication failed!", 403);
     return next(error);
   }
