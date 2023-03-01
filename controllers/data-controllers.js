@@ -86,24 +86,23 @@ exports.createData = async (req, res, next) => {
       VPN,
       New,
       Archive,
+      ISPDomain,
     });
-    res
-      .status(201)
-      .json({
-        dataId: newData.ID,
-        IP: newData.IP,
-        IPDetails: newData.IPDetails,
-        Host: newData.Host,
-        Source: newData.Source,
-        Domain: newData.Domain,
-        Brand: newData.Brand,
-        Time: newData.Time,
-        Country: newData.Country,
-        ISP: newData.ISP,
-        VPN: newData.VPN,
-        New: newData.New,
-        Archive: newData.Archive,
-      });
+    res.status(201).json({
+      dataId: newData.ID,
+      IP: newData.IP,
+      IPDetails: newData.IPDetails,
+      Host: newData.Host,
+      Source: newData.Source,
+      Domain: newData.Domain,
+      Brand: newData.Brand,
+      Time: newData.Time,
+      Country: newData.Country,
+      ISP: newData.ISP,
+      VPN: newData.VPN,
+      New: newData.New,
+      Archive: newData.Archive,
+    });
   } catch (err) {
     console.log(err);
     const error = new HttpError(
