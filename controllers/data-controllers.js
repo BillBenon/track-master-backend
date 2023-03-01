@@ -1,7 +1,8 @@
 const { validationResult } = require("express-validator");
-
-const HttpError = require("../models/http-error");
+const querystring = require("querystring");
 const Data = require("../models/Data");
+const HttpError = require("../models/http-error");
+const fetch = require("node-fetch");
 
 exports.getDataById = async (req, res, next) => {
   const dataId = req.params.did;
@@ -28,7 +29,6 @@ exports.getData = async (req, res, next) => {
     const data = await Data.findAll();
     res.json({ data });
   } catch (err) {
-    console.log(err);
     const error = new HttpError(
       "Fetching data failed, please try again later.",
       500
@@ -38,14 +38,10 @@ exports.getData = async (req, res, next) => {
 };
 
 exports.createData = async (req, res, next) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
     return next(
-      new HttpError(
-        errors.array()[0].msg ||
-          "Invalid inputs passed, please check your data",
-        422
-      )
+      new HttpError("Invalid inputs passed, please check your data", 422)
     );
   }
 
@@ -56,14 +52,13 @@ exports.createData = async (req, res, next) => {
     Source,
     Domain,
     Brand,
-    Time,
     Country,
     ISP,
+    Owner,
+    ISPDomain,
     VPN,
     New,
     Archive,
-    owner,
-    ISPDomain,
   } = req.body;
 
   try {
@@ -71,24 +66,33 @@ exports.createData = async (req, res, next) => {
       `https://restcountries.com/v3.1/name/${Country}?fields=flag,name`
     ).then((data) => data.json());
 
+    let query = {
+      access_key: "9869d133b1414a5b015b9cf6048a781a",
+      ua: req.headers["user-agent"],
+    };
+
+    const detect = await fetch(
+      `http://api.userstack.com/detect?${querystring.stringify(query)}`
+    ).then((res) => res.json());
+
     const newData = await Data.create({
       IP,
       IPDetails,
-      Host,
-      owner,
+      Host: detect.device.type,
+      Owner,
       Source,
       Domain,
-      Brand,
-      Time,
-      CountryFlag: data.flag,
-      Country: data.name.common,
+      Brand: detect.device.brand,
+      CountryFlag: data[0].flag,
+      Country: data[0].name.common,
       ISP,
+      ISPDomain,
       VPN,
       New,
       Archive,
-      ISPDomain,
     });
-    res.status(201).json({
+
+    return res.status(201).json({
       dataId: newData.ID,
       IP: newData.IP,
       IPDetails: newData.IPDetails,
@@ -96,12 +100,9 @@ exports.createData = async (req, res, next) => {
       Source: newData.Source,
       Domain: newData.Domain,
       Brand: newData.Brand,
-      Time: newData.Time,
       Country: newData.Country,
       ISP: newData.ISP,
-      VPN: newData.VPN,
-      New: newData.New,
-      Archive: newData.Archive,
+      CountryFlag: newData.CountryFlag,
     });
   } catch (err) {
     console.log(err);

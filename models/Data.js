@@ -37,7 +37,7 @@ const Data = sequelize.define(
     },
     Brand: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     Country: {
       type: Sequelize.STRING,
@@ -57,27 +57,26 @@ const Data = sequelize.define(
     },
     VPN: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
+      defaultValue: "no vpn used",
     },
     New: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      allowNull: true,
+      defaultValue: true,
     },
     Archive: {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      defaultValue: 1,
     },
-    created_at: {
+    createdAt: {
+      type: Sequelize.DATE,
+      defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
+    },
+    updatedAt: {
       type: Sequelize.DATE,
       defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      allowNull: false,
-    },
-    updated_at: {
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.literal(
-        "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-      ),
-      allowNull: false,
     },
   },
   {

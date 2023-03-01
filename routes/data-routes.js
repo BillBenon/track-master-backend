@@ -80,13 +80,13 @@ const router = express.Router();
  *         Archive: 20
  *         created_at: 2022-01-26T08:49:16.000Z
  *         updated_at: 2022-01-26T08:49:16.000Z
- * 
+ *
  *   securitySchemes:
  *     bearerAuth:
  *       type: http
  *       scheme: bearer
  *       bearerFormat: JWT
- * 
+ *
  * /api/data/{did}:
  *   get:
  *     summary: Get data by ID
@@ -298,23 +298,23 @@ router.get("/", dataControllers.getData);
 router.use(checkAuth);
 
 router.post(
-    "/",
-    [
-        body("IP").trim().not().isEmpty(),
-        body("IPDetails").trim().not().isEmpty(),
-        body("Host").trim().not().isEmpty(),
-        body("Source").trim().not().isEmpty(),
-        body("Domain").trim().not().isEmpty(),
-        body("Brand").trim().not().isEmpty(),
-        body("Owner").trim().not().isEmpty(),
-        body("Time").trim().isNumeric().not().isEmpty(),
-        body("Country").trim().not().isEmpty(),
-        body("ISP").trim().not().isEmpty(),
-        body("VPN").trim().not().isEmpty(),
-        body("New").trim().not().isEmpty().isNumeric(),
-        body("Archive").trim().not().isEmpty().isNumeric(),
-    ],
-    dataControllers.createData
+  "/",
+  [
+    body("IP").trim().not().isEmpty(),
+    body("IPDetails").trim().not().isEmpty(),
+    body("Host").trim().not().isEmpty(),
+    body("Source").trim().not().isEmpty(),
+    body("Domain").trim().not().isEmpty(),
+    body("Brand").trim(),
+    body("Owner").trim().not().isEmpty(),
+    body("Country").trim().not().isEmpty(),
+    body("ISP").trim().not().isEmpty(),
+    body("ISPDomain").trim().not().isEmpty(),
+    body("VPN").trim(),
+    body("New").trim().isBoolean(),
+    body("Archive").trim().isNumeric(),
+  ],
+  dataControllers.createData
 );
 
 router.delete("/:did", dataControllers.deleteData);
