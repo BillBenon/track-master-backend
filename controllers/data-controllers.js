@@ -26,7 +26,15 @@ exports.getDataById = async (req, res, next) => {
 
 exports.getData = async (req, res, next) => {
   try {
-    const data = await Data.findAll();
+    const { page } = req.query;
+
+    const offSet = (page - 1) * 20 || 1;
+
+    const data = await Data.findAll({
+      where: {},
+      limit: 20,
+      offset: offSet,
+    });
     res.json({ data });
   } catch (err) {
     const error = new HttpError(
@@ -70,11 +78,11 @@ exports.createData = async (req, res, next) => {
       access_key: "9869d133b1414a5b015b9cf6048a781a",
       ua: req.headers["user-agent"],
     };
-    console.log('starting the fetch...')
+    console.log("starting the fetch...");
     const detect = await fetch(
       `http://api.userstack.com/detect?${querystring.stringify(query)}`
     ).then((res) => res.json());
-    console.log(detect)
+    console.log(detect);
 
     const newData = await Data.create({
       IP,
