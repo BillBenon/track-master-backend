@@ -30,7 +30,6 @@ exports.getUsers = async (req, res, next) => {
     const users = await User.findAll({ attributes: { exclude: ["password"] } });
     res.json({ users });
   } catch (err) {
-    console.log(err);
     const error = new HttpError(
       "Fetching users failed, please try again later.",
       500
