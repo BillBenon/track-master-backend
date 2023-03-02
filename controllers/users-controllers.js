@@ -187,13 +187,18 @@ exports.updateUser = async (req, res, next) => {
   const userId = req.params.uid;
 
   try {
-    const user = await User().findByPk(userId);
+    const user = await User.findByPk(userId);
+
     if (!user) {
       return next(new HttpError("Could not find user.", 404));
     }
 
-    const isValid = await bcrypt.compare(currentPassword, user.password);
+    console.log(
+      `the current password from req is ${currentPassword}, from user is ${user.password} and the new one is ${password}`
+    );
 
+    const isValid = await bcrypt.compare(currentPassword, user.password);
+    console.log(isValid);
     if (isValid) {
       const hashedPassword = await bcrypt.hash(password, 12);
       user.email = email;
@@ -201,10 +206,14 @@ exports.updateUser = async (req, res, next) => {
       await user.save();
       return res.status(200).json({ user: user });
     }
-    return new HttpError("Could not log you in, please try again.", 403);
+    const error = new HttpError(
+      "Invalid credentials.",
+      403
+    );
+    return next(error);
   } catch (err) {
     const error = new HttpError(
-      "Something went wrong, could not update user.",
+      "Something went wrong, could not update user!",
       500
     );
     return next(error);
