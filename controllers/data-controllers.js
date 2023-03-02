@@ -28,7 +28,7 @@ exports.getData = async (req, res, next) => {
   try {
     const { page } = req.query;
 
-    const offSet = (page - 1) * 20 || 1;
+    const offSet = (page - 1) * 20 || 0;
 
     const data = await Data.findAll({
       where: {},
