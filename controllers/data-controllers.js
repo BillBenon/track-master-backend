@@ -29,7 +29,7 @@ exports.getData = async (req, res, next) => {
     const { page } = req.query;
     let limits = {};
 
-    if (page) {
+    if (page != undefined) {
       const offSet = (page - 1) * 20 || 0;
 
       limits = {
@@ -41,8 +41,8 @@ exports.getData = async (req, res, next) => {
     const data = await Data.findAll({
       where: {},
       ...limits,
-    })
-    console.log(JSON.parse(JSON.stringify(data)))
+      group: ["Country"],
+    });
 
     return res.json({ data });
   } catch (err) {
