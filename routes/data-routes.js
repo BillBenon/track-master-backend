@@ -300,19 +300,11 @@ router.use(checkAuth);
 router.post(
   "/",
   [
-    body("IP").trim().not().isEmpty(),
-    body("IPDetails").trim().not().isEmpty(),
-    body("Host").trim().not().isEmpty(),
-    body("Source").trim().not().isEmpty(),
-    body("Domain").trim().not().isEmpty(),
-    body("Brand").trim(),
     body("Owner").trim().not().isEmpty(),
-    body("Country").trim().not().isEmpty(),
-    body("ISP").trim().not().isEmpty(),
-    body("ISPDomain").trim().not().isEmpty(),
     body("VPN").trim(),
     body("New").trim().isBoolean(),
     body("Archive").trim().isNumeric(),
+    body("latlng").trim().isObject(),
   ],
   dataControllers.createData
 );

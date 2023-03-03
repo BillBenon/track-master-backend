@@ -3,6 +3,7 @@ const querystring = require("querystring");
 const Data = require("../models/Data");
 const HttpError = require("../models/http-error");
 const fetch = require("node-fetch");
+const { METHODS } = require("http");
 
 exports.getDataById = async (req, res, next) => {
   const dataId = req.params.did;
@@ -53,53 +54,41 @@ exports.createData = async (req, res, next) => {
     );
   }
 
-  const {
-    IP,
-    IPDetails,
-    Host,
-    Source,
-    Domain,
-    Brand,
-    Country,
-    ISP,
-    Owner,
-    ISPDomain,
-    VPN,
-    New,
-    Archive,
-  } = req.body;
+  const { Owner, VPN, New, Archive, latlng } = req.body;
 
   try {
-    const data = await fetch(
-      `https://restcountries.com/v3.1/name/${Country}?fields=flag,name`
-    ).then((data) => data.json());
+    const location = await fetch(
+      "https://ipgeolocation.abstractapi.com/v1/?api_key=64545adb724a4f19a273263f8ff1c458"
+    ).then((res) => res.json());
 
     let query = {
       access_key: "9869d133b1414a5b015b9cf6048a781a",
       ua: req.headers["user-agent"],
     };
-    console.log("starting the fetch...");
+
     const detect = await fetch(
       `http://api.userstack.com/detect?${querystring.stringify(query)}`
     ).then((res) => res.json());
-    console.log(detect);
 
     const newData = await Data.create({
-      IP,
-      IPDetails,
+      IP: location.ip_adress,
+      IPDetails: `This is an ip address with the request made from ${location.country}`,
       Host: detect.device.type,
       Owner,
-      Source,
-      Domain,
+      Source: `from latitude: ${
+        latlng[0] || location.latitude
+      } and longitude: ${latlng[1] || location.longitude}`,
+      Domain: req.headers.host,
       Brand: detect.device.brand,
-      CountryFlag: data[0].flag,
-      Country: data[0].name.common,
-      ISP,
-      ISPDomain,
+      CountryFlag: location.flag.emoji,
+      Country: location.country,
+      ISP: location.isp_name,
+      ISPDomain: location.isp_name,
       VPN,
       New,
       Archive,
     });
+    console.log(newData);
 
     return res.status(201).json({
       dataId: newData.ID,
