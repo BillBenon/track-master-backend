@@ -41,8 +41,10 @@ exports.getData = async (req, res, next) => {
     const data = await Data.findAll({
       where: {},
       ...limits,
-    });
-    res.json({ data });
+    })
+    console.log(JSON.parse(JSON.stringify(data)))
+
+    return res.json({ data });
   } catch (err) {
     const error = new HttpError(
       "Fetching data failed, please try again later.",
