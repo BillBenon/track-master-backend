@@ -302,7 +302,6 @@ router.post(
   [
     body("Owner").trim().not().isEmpty(),
     body("VPN").trim(),
-    body("New").trim().isBoolean(),
     body("Archive").trim().isNumeric(),
     body("latlng").trim().isObject(),
   ],

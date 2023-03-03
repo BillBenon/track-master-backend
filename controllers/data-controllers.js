@@ -3,7 +3,6 @@ const querystring = require("querystring");
 const Data = require("../models/Data");
 const HttpError = require("../models/http-error");
 const fetch = require("node-fetch");
-const { METHODS } = require("http");
 
 exports.getDataById = async (req, res, next) => {
   const dataId = req.params.did;
@@ -54,13 +53,9 @@ exports.createData = async (req, res, next) => {
     );
   }
 
-  const { Owner, VPN, New, Archive, latlng } = req.body;
+  const { Owner, Archive, latlng } = req.body;
 
   try {
-    const location = await fetch(
-      "https://ipgeolocation.abstractapi.com/v1/?api_key=64545adb724a4f19a273263f8ff1c458"
-    ).then((res) => res.json());
-
     let query = {
       access_key: "9869d133b1414a5b015b9cf6048a781a",
       ua: req.headers["user-agent"],
@@ -68,27 +63,37 @@ exports.createData = async (req, res, next) => {
 
     const detect = await fetch(
       `http://api.userstack.com/detect?${querystring.stringify(query)}`
+    )
+      .then((res) => res.json())
+      .catch((err) => console.log("The error is: ", err));
+
+    const location = await fetch(
+      "https://ipgeolocation.abstractapi.com/v1/?api_key=64545adb724a4f19a273263f8ff1c458"
     ).then((res) => res.json());
 
+    const locationToBeStored = {
+      longitude: latlng.longitude || location.longitude,
+      latitude: latlng.latitude || location.latitude,
+    };
+
     const newData = await Data.create({
-      IP: location.ip_adress,
+      IP: req.connection.remoteAddress,
       IPDetails: `This is an ip address with the request made from ${location.country}`,
       Host: detect.device.type,
       Owner,
       Source: `from latitude: ${
-        latlng[0] || location.latitude
-      } and longitude: ${latlng[1] || location.longitude}`,
+        latlng.latitude || location.latitude
+      } and longitude: ${latlng.longitude || location.longitude}`,
       Domain: req.headers.host,
-      Brand: detect.device.brand,
+      Brand: detect.device.brand || `Unidentified`,
       CountryFlag: location.flag.emoji,
       Country: location.country,
-      ISP: location.isp_name,
-      ISPDomain: location.isp_name,
-      VPN,
-      New,
-      Archive,
+      ISP: location.connection.isp_name,
+      ISPDomain: location.connection.isp_name,
+      isVpn: location.security.is_vpn,
+      Archive: Archive || `Unidentified`,
+      location: JSON.stringify(locationToBeStored),
     });
-    console.log(newData);
 
     return res.status(201).json({
       dataId: newData.ID,
@@ -101,6 +106,10 @@ exports.createData = async (req, res, next) => {
       Country: newData.Country,
       ISP: newData.ISP,
       CountryFlag: newData.CountryFlag,
+      location: JSON.parse(newData.location),
+      isVpn: newData.isVpn,
+      New: newData.New,
+      Archive: newData.Archive,
     });
   } catch (err) {
     console.log(err);

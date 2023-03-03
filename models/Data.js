@@ -55,10 +55,9 @@ const Data = sequelize.define(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    VPN: {
-      type: Sequelize.STRING,
-      allowNull: true,
-      defaultValue: "no vpn used",
+    isVpn: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
     },
     New: {
       type: Sequelize.BOOLEAN,
@@ -66,9 +65,12 @@ const Data = sequelize.define(
       defaultValue: true,
     },
     Archive: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       allowNull: true,
-      defaultValue: 1,
+    },
+    location: {
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     createdAt: {
       type: Sequelize.DATE,
@@ -106,7 +108,7 @@ const Data = sequelize.define(
         fields: ["ISP"],
       },
       {
-        name: "idx_email",
+        name: "idx_domain",
         fields: ["Domain"],
       },
       {
@@ -116,6 +118,10 @@ const Data = sequelize.define(
       {
         name: "idx_countryFlag",
         fields: ["CountryFlag"],
+      },
+      {
+        name: "idx_location",
+        fields: ["Location"],
       },
     ],
   }
