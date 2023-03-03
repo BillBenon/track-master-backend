@@ -27,13 +27,20 @@ exports.getDataById = async (req, res, next) => {
 exports.getData = async (req, res, next) => {
   try {
     const { page } = req.query;
+    let limits = {};
 
-    const offSet = (page - 1) * 20 || 0;
+    if (page) {
+      const offSet = (page - 1) * 20 || 0;
+
+      limits = {
+        limit: 20,
+        offset: offSet,
+      };
+    }
 
     const data = await Data.findAll({
       where: {},
-      limit: 20,
-      offset: offSet,
+      ...limits,
     });
     res.json({ data });
   } catch (err) {
