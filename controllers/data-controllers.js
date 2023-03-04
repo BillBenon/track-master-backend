@@ -3,6 +3,7 @@ const querystring = require("querystring");
 const Data = require("../models/Data");
 const HttpError = require("../models/http-error");
 const fetch = require("node-fetch");
+const sequelize = require("../config/connectionPool");
 
 exports.getDataById = async (req, res, next) => {
   const dataId = req.params.did;
@@ -38,13 +39,18 @@ exports.getData = async (req, res, next) => {
       };
     }
 
+    
     const data = await Data.findAll({
       where: {},
       ...limits,
-      group: ["Country"],
     });
 
-    return res.json({ data });
+    const dataCountByCountry = await Data.findAll({
+      attributes: ["Country", "Owner" ,sequelize.fn("count", sequelize.col("ID"))],
+      group: ["Country", "Owner"],
+    });
+
+    return res.json({ data, nbrHits: dataCountByCountry });
   } catch (err) {
     const error = new HttpError(
       "Fetching data failed, please try again later.",
