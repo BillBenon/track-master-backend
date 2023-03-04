@@ -45,7 +45,7 @@ exports.getData = async (req, res, next) => {
         "Owner",
         sequelize.fn("count", sequelize.col("ID")),
       ],
-      group: ["Country"],
+      group: ["Country", "Owner"],
     });
 
     const data = await Data.findAll({
@@ -55,6 +55,7 @@ exports.getData = async (req, res, next) => {
 
     return res.json({ data, nbrHits: dataCountByCountry });
   } catch (err) {
+    console.log("The error is: ", err)
     const error = new HttpError(
       "Fetching data failed, please try again later.",
       500
