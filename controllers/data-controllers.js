@@ -39,7 +39,7 @@ exports.getData = async (req, res, next) => {
       };
     }
 
-    const dataCountByCountry = await Data.findAll({
+    const users = await Data.findAll({
       attributes: [
         "Country",
         "Owner",
@@ -48,14 +48,24 @@ exports.getData = async (req, res, next) => {
       group: ["Country", "Owner"],
     });
 
+    const countries = await Data.findAll({
+      attributes: ["Country"],
+      group: ["Country"],
+    });
+
     const data = await Data.findAll({
       where: {},
       ...limits,
     });
 
-    return res.json({ data, nbrHits: dataCountByCountry });
+    return res.json({
+      data,
+      nbrCountries: countries,
+      nbrDataHits: data.length,
+      nbrUsers: users,
+    });
   } catch (err) {
-    console.log("The error is: ", err)
+    console.log("The error is: ", err);
     const error = new HttpError(
       "Fetching data failed, please try again later.",
       500
