@@ -39,18 +39,18 @@ exports.getData = async (req, res, next) => {
       };
     }
 
-    const data = await Data.findAll({
-      where: {},
-      ...limits,
-    });
-
     const dataCountByCountry = await Data.findAll({
       attributes: [
         "Country",
         "Owner",
         sequelize.fn("count", sequelize.col("ID")),
       ],
-      group: ["Country", "Owner"],
+      group: ["Country"],
+    });
+
+    const data = await Data.findAll({
+      where: {},
+      ...limits,
     });
 
     return res.json({ data, nbrHits: dataCountByCountry });
