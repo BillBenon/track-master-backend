@@ -39,18 +39,21 @@ exports.getData = async (req, res, next) => {
       };
     }
 
-    
     const data = await Data.findAll({
       where: {},
       ...limits,
     });
 
-    // const dataCountByCountry = await Data.findAll({
-    //   attributes: ["Country", "Owner" ,sequelize.fn("count", sequelize.col("ID"))],
-    //   group: ["Country", "Owner"],
-    // });
+    const dataCountByCountry = await Data.findAll({
+      attributes: [
+        "Country",
+        "Owner",
+        sequelize.fn("count", sequelize.col("ID")),
+      ],
+      group: ["Country", "Owner"],
+    });
 
-    return res.json({ data });
+    return res.json({ data, nbrHits: dataCountByCountry });
   } catch (err) {
     const error = new HttpError(
       "Fetching data failed, please try again later.",
