@@ -60,7 +60,7 @@ exports.getData = async (req, res, next) => {
 
     return res.json({
       data,
-      nbrCountries: countries,
+      nbrCountries: countries.length,
       nbrDataHits: data.length,
       nbrUsers: users,
     });
