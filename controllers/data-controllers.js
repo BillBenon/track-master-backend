@@ -28,6 +28,7 @@ exports.getDataById = async (req, res, next) => {
 exports.getData = async (req, res, next) => {
   try {
     const { page } = req.query;
+    console.log(page)
     let limits = {};
 
     if (page != undefined) {
