@@ -62,7 +62,7 @@ exports.getData = async (req, res, next) => {
       data,
       nbrCountries: countries.length,
       nbrDataHits: data.length,
-      nbrUsers: users,
+      users,
     });
   } catch (err) {
     console.log("The error is: ", err);
