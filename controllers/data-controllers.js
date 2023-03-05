@@ -28,7 +28,6 @@ exports.getDataById = async (req, res, next) => {
 exports.getData = async (req, res, next) => {
   try {
     const { page } = req.query;
-    console.log(page)
     let limits = {};
 
     if (page != undefined) {
@@ -66,7 +65,6 @@ exports.getData = async (req, res, next) => {
       users,
     });
   } catch (err) {
-    console.log("The error is: ", err);
     const error = new HttpError(
       "Fetching data failed, please try again later.",
       500
@@ -95,7 +93,6 @@ exports.createData = async (req, res, next) => {
       `http://api.userstack.com/detect?${querystring.stringify(query)}`
     )
       .then((res) => res.json())
-      .catch((err) => console.log("The error is: ", err));
 
     const location = await fetch(
       "https://ipgeolocation.abstractapi.com/v1/?api_key=64545adb724a4f19a273263f8ff1c458"
@@ -142,7 +139,6 @@ exports.createData = async (req, res, next) => {
       Archive: newData.Archive,
     });
   } catch (err) {
-    console.log(err);
     const error = new HttpError(
       "Registering data failed, please try again",
       500
